@@ -62,10 +62,10 @@ body {
   /* AUTRES         */
   /* ============== */
   
-  /* Exemple de style sur le carousel, si besoin :
+  /* Exemple de style sur le carousel, si besoin : */
   .carousel-inner img {
 	max-height: 400px;
 	object-fit: cover;
   }
-  */
+  
   
