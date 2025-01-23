@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h1>Accueil : Segmentation des Clients Bancaires</h1>
+
+  <p>Bienvenue dans ce projet de Data Analytics et de Machine Learning 
+  pour la prédiction de l’attrition des clients bancaires.</p>
+
+  <h2>Description du Dataset</h2>
+  <p>Ce dataset contient {{ nb_clients }} enregistrements (clients). 
+     Les principales colonnes sont : {{ colonnes }}.</p>
+  <p>Contenu du dataset : 
+     - Détails démographiques (âge, genre, statut marital, catégorie de revenu).<br>
+     - Informations sur la relation carte de crédit (type de carte, nombre de mois depuis l’ouverture, périodes d’inactivité).<br>
+     - Comportement de dépense (solde total, limite de crédit, taux d’utilisation moyen, etc.).<br>
+     - Indicateurs de churn (attrition) et variables possibles pour la prédiction.
+  </p>
+  <p>Ce projet vise à analyser ces données et à construire un modèle pour prédire 
+     quels clients risquent de churner (fermer leur compte).</p>
+{% endblock %}
