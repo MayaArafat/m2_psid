@@ -1,12 +1,8 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
+from dashboard import init_dashboard  # on importe la fonction
 import pandas as pd
 
 app = Flask(__name__)
-
-# Exemple de DataFrame fictif
-df_clients = pd.DataFrame({
-    'Gender': ['F', 'M', 'F', 'F', 'M', 'M']
-})
 
 @app.route('/')
 def home():
@@ -14,18 +10,9 @@ def home():
 
 @app.route('/dashboard')
 def dashboard():
-    # Calcul de la répartition par genre
-    gender_counts = df_clients['Gender'].value_counts().to_dict()
-
-    # Conversion en listes
-    gender_labels = list(gender_counts.keys())   # Ex.: ["F", "M"]
-    gender_values = list(gender_counts.values()) # Ex.: [3, 3]
-
-    return render_template(
-        'dashboard.html',
-        gender_labels=gender_labels,
-        gender_values=gender_values
-    )
+    return redirect('/dash/')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # On appelle init_dashboard(app) pour monter Dash sur /dash/
+    init_dashboard(app)
+    app.run(debug=True, port=8800)
