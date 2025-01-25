@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h1>Dashboard</h1>
+
+  <!-- Affichage rapide des stats (en texte) -->
+  
+
+  <!-- Conteneur pour le graphique -->
+  <div id="chart-gender" style="width:600px;height:400px;"></div>
+{% endblock %}
+
+{% block scripts %}
+  <!-- Plotly CDN -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  
+  <script>
+    // Conversion d'une chaîne JSON en tableau JS
+    // 'safe' empêche Jinja d'échapper les caractères JSON
+    let labels = JSON.parse('{{ gender_labels|tojson|safe }}');
+    let values = JSON.parse('{{ gender_values|tojson|safe }}');
+
+    let data = [{
+      labels: labels,
+      values: values,
+      type: 'pie'
+    }];
+
+    let layout = {
+      title: 'Répartition par Genre'
+    };
+
+    Plotly.newPlot('chart-gender', data, layout);
+  </script>
+{% endblock %}
