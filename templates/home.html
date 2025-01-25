@@ -1,19 +1,143 @@
 {% extends "layout.html" %}
+
 {% block content %}
-  <h1>Accueil : Segmentation des Clients Bancaires</h1>
+<!-- Section "Hero" -->
+<div class="hero-banner">
+  <div class="container hero-content text-center">
+    <h1 class="hero-title">Découvrez la Segmentation Bancaire</h1>
+    <p class="hero-subtitle">
+      Mieux comprendre et servir les clients grâce à l’analyse des données et au Machine Learning.
+    </p>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg">Voir le Dashboard</a>
+  </div>
+</div>
 
-  <p>Bienvenue dans ce projet de Data Analytics et de Machine Learning 
-  pour la prédiction de l’attrition des clients bancaires.</p>
+<!-- Présentation rapide -->
+<div class="container py-5">
+  <div class="row align-items-center">
+    <div class="col-md-6">
+      <h2 class="fw-bold">Notre Objectif</h2>
+      <p class="text-muted">
+        Identifier et anticiper les comportements de nos clients pour proposer des services 
+        financiers personnalisés et prévenir les risques d’attrition (churn). 
+        Ce projet s’appuie sur un dataset riche comprenant :
+      </p>
+      <ul>
+        <li>Informations démographiques (âge, genre, revenu, etc.)</li>
+        <li>Comportements de dépenses et d'utilisation de crédit</li>
+        <li>Données d'inactivité et signaux d’alerte avant résiliation</li>
+      </ul>
+      <p class="text-muted">
+        Les réglementations bancaires en vigueur (PSD2, KYC, AML, RGPD) nous imposent de traiter 
+        ces données avec la plus grande confidentialité et conformité légale.
+      </p>
+      <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary mt-3">Explorer</a>
+    </div>
+    <div class="col-md-6">
+      <img 
+        src="{{ url_for('static', filename='images/banking_data.jpg') }}" 
+        alt="Analyse de données bancaires" 
+        class="img-fluid rounded shadow"
+      >
+    </div>
+  </div>
+</div>
 
-  <h2>Description du Dataset</h2>
-  <p>Ce dataset contient {{ nb_clients }} enregistrements (clients). 
-     Les principales colonnes sont : {{ colonnes }}.</p>
-  <p>Contenu du dataset : 
-     - Détails démographiques (âge, genre, statut marital, catégorie de revenu).<br>
-     - Informations sur la relation carte de crédit (type de carte, nombre de mois depuis l’ouverture, périodes d’inactivité).<br>
-     - Comportement de dépense (solde total, limite de crédit, taux d’utilisation moyen, etc.).<br>
-     - Indicateurs de churn (attrition) et variables possibles pour la prédiction.
+<!-- Carrousel des réglementations (exemple) -->
+<div class="container my-5">
+  <h2 class="text-center mb-4">Réglementations Clés</h2>
+  <div id="carouselReglementations" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <!-- Slide 1: PSD2 -->
+      <div class="carousel-item active">
+        <img 
+          src="{{ url_for('static', filename='images/psd2.jpg') }}" 
+          class="d-block w-100" 
+          alt="PSD2"
+        >
+        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-3">
+          <h5>PSD2 (Payment Services Directive 2)</h5>
+          <p>
+            Directive européenne sur les services de paiement, 
+            favorisant l'innovation et la sécurité dans l’écosystème bancaire.
+          </p>
+        </div>
+      </div>
+      <!-- Slide 2: KYC -->
+      <div class="carousel-item">
+        <img 
+          src="{{ url_for('static', filename='images/kyc.jpg') }}" 
+          class="d-block w-100" 
+          alt="KYC"
+        >
+        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-3">
+          <h5>KYC (Know Your Customer)</h5>
+          <p>
+            Mesures de connaissance client visant à vérifier l'identité 
+            et la fiabilité des usagers pour lutter contre la fraude.
+          </p>
+        </div>
+      </div>
+      <!-- Slide 3: AML -->
+      <div class="carousel-item">
+        <img 
+          src="{{ url_for('static', filename='images/aml.jpg') }}" 
+          class="d-block w-100" 
+          alt="AML"
+        >
+        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-3">
+          <h5>AML (Anti-Money Laundering)</h5>
+          <p>
+            Dispositifs de lutte contre le blanchiment d’argent 
+            et le financement du terrorisme dans les établissements bancaires.
+          </p>
+        </div>
+      </div>
+	  <!-- Slide 4: RGPD -->
+      <div class="carousel-item">
+        <img 
+          src="{{ url_for('static', filename='images/gdpr.jpg') }}" 
+          class="d-block w-100" 
+          alt="RGPD"
+        >
+        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-3">
+          <h5>RGPD (Règlement Général sur la Protection des Données)</h5>
+          <p>
+			Règlementation européenne qui encadre le traitement des données 
+			de manière égalitaire sur tout le territoire de l'Union européenne (UE).
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- Contrôles carrousel -->
+    <button 
+      class="carousel-control-prev" 
+      type="button" 
+      data-bs-target="#carouselReglementations" 
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Précédent</span>
+    </button>
+    <button 
+      class="carousel-control-next" 
+      type="button" 
+      data-bs-target="#carouselReglementations" 
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Suivant</span>
+    </button>
+  </div>
+</div>
+
+<!-- Section CTA -->
+<div class="container py-5 text-center">
+  <h2 class="mb-4">Rejoignez-nous dans cette aventure de la data</h2>
+  <p class="text-muted mb-4">
+    Nous analysons en continu les données bancaires pour améliorer la satisfaction client 
+    et développer des services financiers adaptés à chaque profil.
   </p>
-  <p>Ce projet vise à analyser ces données et à construire un modèle pour prédire 
-     quels clients risquent de churner (fermer leur compte).</p>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-lg btn-primary">Accéder au Dashboard</a>
+</div>
 {% endblock %}

@@ -1,0 +1,71 @@
+/* ============== */
+/* BODY & GLOBAL  */
+/* ============== */
+
+/* Fond de page en léger dégradé de gris */
+body {
+	background: linear-gradient(to right, #f9f9f9, #ececec);
+	margin: 0;
+	padding: 0;
+	font-family: "Roboto", sans-serif;
+  }
+  
+  /* ============== */
+  /* HERO SECTION   */
+  /* ============== */
+  
+  .hero-banner {
+	position: relative;
+	/* Overlay en dégradé + image de fond */
+	background: 
+	  linear-gradient(
+		rgba(0, 0, 0, 0.4), 
+		rgba(0, 0, 0, 0.4)
+	  ), 
+	  url("../images/banking_hero.jpg") no-repeat center center;
+	background-size: cover;
+  
+	/* Hauteur minimum pour un effet "hero" */
+	min-height: 500px; 
+	display: flex;
+	align-items: center;
+	color: #fff;
+	margin-bottom: 0;
+  }
+  
+  /* Centrer le contenu dans le hero */
+  .hero-content {
+	width: 100%;
+  }
+  
+  /* Titre principal du hero */
+  .hero-title {
+	font-size: 3rem;       /* Ajuster si besoin */
+	font-weight: 800;      
+	text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); 
+	margin-bottom: 1rem;
+  }
+  
+  /* Sous-titre du hero */
+  .hero-subtitle {
+	font-size: 1.25rem; 
+	margin-bottom: 1.5rem; 
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Si tu veux un peu d'espace horizontal */
+  .hero-banner .container {
+	padding: 0 15px;
+  }
+  
+  /* ============== */
+  /* AUTRES         */
+  /* ============== */
+  
+  /* Exemple de style sur le carousel, si besoin : */
+  .carousel-inner img {
+	max-height: 400px;
+	object-fit: cover;
+  }
+  
+  
