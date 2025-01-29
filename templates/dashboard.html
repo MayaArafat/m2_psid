@@ -9,7 +9,7 @@
       <!-- [ Main Content ] start -->
           <div class="row">
         <!-- [ NbTotal de clients ] start -->
-        <div class="col-md-6 col-xl-4">
+        <div class="col-12 col-lg-4">
             <div class="card">
                 <div class="card-body">
                     <h6 class="mb-4">Nombre total de clients</h6>
@@ -25,7 +25,7 @@
         <!-- [ Nb total de clients section ] end -->
 
         <!-- [ Taux d'attrition  section ] start -->
-        <div class="col-md-6 col-xl-4">
+        <div class="col-12 col-lg-4">
             <div class="card">
                 <div class="card-body">
                     <h6 class="mb-4">Taux d'attrition </h6>
@@ -40,7 +40,7 @@
         <!-- [ Taux d'attrition section ] end -->
 
         <!-- [ Ancienneté moyenne des clients section ] start -->
-        <div class="col-md-12 col-xl-4">
+        <div class="col-12 col-lg-4">
             <div class="card">
                 <div class="card-body">
                     <h6 class="mb-4">Ancienneté moyenne des clients</h6>
@@ -50,7 +50,6 @@
                         </div>
                         <div class="col-3 text-end">
                             <p class="m-b-0">{{ (kpi3 // 12)|int }} ans et {{ (kpi3 % 12)|int }} mois</p>
-
                         </div>
                     </div>
                 </div>
@@ -58,64 +57,65 @@
         </div>
         
     <!-- [ Répartition des clients par statut d'attrition ] start -->
-    <div class="col-xl-6 col-md-8 col-sm-12" style="max-width: 30%; margin: left;">
-        <div class="card" style="max-width: 600px; margin: left;">
+    <div class="col-12 col-lg-4">
+        <div class="card w-100 h-100">
             <div class="card-body text-center">
-                <div id="attrition-chart" style="width: 100%; height: 400px;"></div>
+                <div id="attrition-chart" class="chart-container"></div>
             </div>
         </div>
     </div>
     <!-- [ Répartition des clients par statut d'attrition ] end -->
 
-    <div class="col-xl-6 col-md-8 col-sm-12" style="max-width: 30%; margin: left;">
-        <div class="card" style="max-width: 600px; margin: left;">
+    <div class="col-12 col-lg-4">
+        <div class="card w-100 h-100">
             <div class="card-body text-center">
-                <div id="graph_nbclients_par_genre" style="width: 100%; height: 400px;"></div>
+                <div id="graph_nbclients_par_genre"></div>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-6 col-md-8 col-sm-12" style="max-width: 30%; margin: left;">
-        <div class="card" style="max-width: 600px; margin: left;">
+    <div class="col-12 col-lg-4">
+        <div class="card w-100 h-100">
             <div class="card-body text-center">
-                <div id="attrition-taux" style="width: 100%; height: 400px;"></div>
+                <div id="attrition-taux"></div>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-6 col-md-8 col-sm-12" style="max-width: 40%; margin: right;">
-        <div class="card" style="max-width: 800px; margin: right;">
+    <div class="col-12 col-lg-4">
+        <div class="card w-100 h-100">
             <div class="card-body text-center">
                 <div id="transactions" style="width: 100%; height: 400px;"></div>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-6 col-md-8 col-sm-12" style="max-width: 40%; margin: right;">
-        <div class="card" style="max-width: 800px; margin: right;">
+    <div class="col-12 col-lg-4">
+        <div class="card w-100 h-100">
             <div class="card-body text-center">
                 <div id="hist_utilisation" style="width: 100%; height: 400px;"></div>
             </div>
         </div>
     </div>
-    <div class="col-xl-6 col-md-8 col-sm-12" style="max-width: 40%; margin: right;">
-        <div class="card" style="max-width: 800px; margin: right;">
+    
+    <div class="col-12 col-lg-4">
+        <div class="card w-100 h-100">
             <div class="card-body text-center">
                 <div id="transac_moyen_by_cat" style="width: 100%; height: 400px;"></div>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-6 col-md-8 col-sm-12" style="max-width: 40%; margin: right;">
-        <div class="card" style="max-width: 800px; margin: right;">
+    <div class="col-12 col-lg-4">
+        <div class="card w-100 h-100">
             <div class="card-body text-center">
                 <div id="sunburst_revenu_cart" style="width: 100%; height: 400px;"></div>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-6 col-md-8 col-sm-12" style="max-width: 40%; margin: right;">
-        <div class="card" style="max-width: 800px; margin: right;">
+    <div class="col-12 col-lg-4">
+        <div class="card w-100 h-100">
             <div class="card-body text-center">
                 <div id="parallel_categories" style="width: 100%; height: 400px;"></div>
             </div>
@@ -127,31 +127,35 @@
     <!-- Ajout de Plotly -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script>
-        var graphJSON = {{ fig_attrition_json | safe }};
-        Plotly.newPlot('attrition-chart', graphJSON.data, graphJSON.layout);
-
-        var attritionTauxJSON = {{ taux_attrition_json | safe }};
-        Plotly.newPlot('attrition-taux', attritionTauxJSON.data, attritionTauxJSON.layout);
-
-        var transactionsJson = {{ transactions_json | safe }};
-        Plotly.newPlot('transactions', transactionsJson.data, transactionsJson.layout);
-
-        var histUtilisationJSON = {{ hist_utilisation_json | safe }};
-        Plotly.newPlot('hist_utilisation', histUtilisationJSON.data, histUtilisationJSON.layout);
-
-        var transacMoyenJson = {{ transac_moyen_by_cat_json | safe }};
-        Plotly.newPlot('transac_moyen_by_cat', transacMoyenJson.data, transacMoyenJson.layout);
-
-        var sunburstRevenuCarteJSON = {{ sunburst_revenu_cart_json | safe }};
-        Plotly.newPlot('sunburst_revenu_cart', sunburstRevenuCarteJSON.data, sunburstRevenuCarteJSON.layout);
-
-        var parallelCategoriesJson = {{ parallel_categories_json | safe }};
-        Plotly.newPlot('parallel_categories', parallelCategoriesJson.data, parallelCategoriesJson.layout);
-
-        var graphNbClients_par_genreJson = {{ graph_nbclients_par_genre_json | safe }};
-        Plotly.newPlot('graph_nbclients_par_genre', graphNbClients_par_genreJson.data, graphNbClients_par_genreJson.layout);
-        
+        // Fonction pour rendre chaque graphique responsive
+        function renderResponsiveGraph(graphId, graphJSON) {
+            if (graphJSON) {
+                var layout = graphJSON.layout || {};
+                layout.autosize = true;  // Permet au graphique de s'adapter automatiquement
+                layout.responsive = true; // Active le mode responsive
+    
+                Plotly.newPlot(graphId, graphJSON.data, layout, { responsive: true });
+            }
+        }
+    
+        // Liste des graphiques avec leurs données JSON respectives
+        var graphData = {
+            "attrition-chart": {{ fig_attrition_json | safe }},
+            "attrition-taux": {{ taux_attrition_json | safe }},
+            "transactions": {{ transactions_json | safe }},
+            "hist_utilisation": {{ hist_utilisation_json | safe }},
+            "transac_moyen_by_cat": {{ transac_moyen_by_cat_json | safe }},
+            "sunburst_revenu_cart": {{ sunburst_revenu_cart_json | safe }},
+            "parallel_categories": {{ parallel_categories_json | safe }},
+            "graph_nbclients_par_genre": {{ graph_nbclients_par_genre_json | safe }}
+        };
+    
+        // Boucle sur tous les graphiques pour appliquer la responsivité
+        Object.keys(graphData).forEach(function(graphId) {
+            renderResponsiveGraph(graphId, graphData[graphId]);
+        });
     </script>
+    
 
 {% endblock content %}
 
