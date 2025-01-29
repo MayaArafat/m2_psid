@@ -168,3 +168,43 @@ def get_parallel_categories(df) :
         title="Analyse en parallèle (Attrition, Revenus, Carte)"
     )
     return fig_parallel
+
+# Graoguqyes présent dans les détails 
+# J) Répartition des clients par catégorie de revenues
+def create_income_bar(df):
+    df_income = df.groupby('Income_Category', observed=True).size().reset_index(name='Nombre de clients')
+    fig = px.bar(
+        df_income,
+        x='Income_Category',
+        y='Nombre de clients',
+        title="Répartition des clients par catégorie de revenus",
+        color='Income_Category',
+        labels={
+            'Income_Category': 'Revenus',
+            'Nombre de clients': 'Nombre de clients'
+        }
+    )
+    fig.update_traces(
+        hovertemplate="<b>Revenus</b> : %{x}<br><b>Clients</b> : %{y}"
+    )
+    return fig
+    
+# I) Distribution de l'ancienneté 
+def create_anciennete_histogram(df):
+    fig = px.histogram(
+        df,
+        x='Months_on_book',
+        color='Attrition_Flag',
+        title="Distribution de l'ancienneté",
+        barmode='overlay',
+        nbins=20,
+        labels={
+            'Months_on_book': 'Ancienneté (mois)',
+            'Attrition_Flag': "Statut d'attrition"
+        }
+    )
+    fig.update_traces(
+        opacity=0.6,
+        hovertemplate="<b>Ancienneté</b> : %{x} mois<br><b>Clients</b> : %{y}"
+    )
+    return fig

@@ -8,18 +8,21 @@ import plotly.io as pio
 from analytics_main import *
 
 app = Flask(__name__)
+# On appelle init_dashboard(app) pour monter Dash sur /dash/
+dash_app = init_dashboard(app)
 
 @app.route('/')
 def home():
     return render_template('home.html')
 
-@app.route('/dashboard')    
-def dashboard():
-    return redirect('/dash/')
-    # Calcul de la répartition par genre
+@app.route('/data_analytics')    
+def data_analytics():
+    return render_template("data_analytics.html", dash_app_placeholder=dash_app.index())
 
-@app.route('/dashboard-front')
-def front_dashboard():
+    # return redirect('/dash/')
+
+@app.route('/dashboard')
+def dashboard():
     df = init_data()    
     nb_total_clients, taux_attrition_value, anciennete_moyenne = getKpi(df)
     
@@ -32,6 +35,8 @@ def front_dashboard():
     fig_sunburst_revenu_cart = sunburst_revenu_cart(df)
     fig_parallel_categories = get_parallel_categories(df)
     fig_nbclients_par_genre = nbClients_par_genre(df)
+    fig_client_par_revenu = create_income_bar(df)
+    fig_anciennete = create_anciennete_histogram(df)
 
     # Conversion en JSON pour transmission au template
     graph_fig_attrition = pio.to_json(fig_attrition)
@@ -42,6 +47,8 @@ def front_dashboard():
     graph_sunburst_revenu_cart = pio.to_json(fig_sunburst_revenu_cart)
     graph_parallel_categories = pio.to_json(fig_parallel_categories)
     graph_nbclients_par_genre = pio.to_json(fig_nbclients_par_genre)
+    graph_client_par_revenu = pio.to_json(fig_client_par_revenu)
+    graph_anciennete = pio.to_json(fig_anciennete)
 
 
     return render_template(
@@ -56,12 +63,12 @@ def front_dashboard():
         transac_moyen_by_cat_json = graph_transac_moyen_by_cat,
         sunburst_revenu_cart_json = graph_sunburst_revenu_cart,
         parallel_categories_json = graph_parallel_categories,
-        graph_nbclients_par_genre_json = graph_nbclients_par_genre
+        graph_nbclients_par_genre_json = graph_nbclients_par_genre,
+        graph_client_par_revenu_json = graph_client_par_revenu,
+        graph_anciennete_json = graph_anciennete
     )
 
 
 
 if __name__ == '__main__':
-    # On appelle init_dashboard(app) pour monter Dash sur /dash/
-    init_dashboard(app)
     app.run(debug=True, port=8800)

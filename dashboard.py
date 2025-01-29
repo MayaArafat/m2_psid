@@ -220,6 +220,16 @@ def init_dashboard(server):
         client_info_layout,
         table_layout
     ])
+    style_prez_graph = {
+        'marginBottom': '15px',
+        'fontStyle': 'italic',
+        'fontSize': '16px',
+        'color': '#2c3e50',
+        'backgroundColor': '#ecf0f1',
+        'padding': '10px',
+        'borderRadius': '8px',
+        'boxShadow': '2px 2px 5px rgba(0,0,0,0.1)'
+    }
 
     ###############################################################################
     # 5) ONGLET REVENUS & ANCIENNETÉ : FILTRES INTERACTIFS
@@ -236,7 +246,16 @@ def init_dashboard(server):
         ),
         html.Div(id='filtered-charts', children=[
             dcc.Graph(id='fig-income-filtered'),
-            dcc.Graph(id='fig-anciennete-filtered')
+            html.Div(
+                "Graphique en barres : Ce graphique montre la répartition des clients par catégorie de revenus. On observe que la majorité des clients ont un revenu inférieur à 40K, tandis que les autres catégories sont plus équilibrées en termes de répartition.",
+                style=style_prez_graph
+            ),
+            dcc.Graph(id='fig-anciennete-filtered'),
+            html.Div(
+            "Graphique en histogramme : Ce graphique illustre la distribution de l'ancienneté des clients en mois, en fonction de leur statut d'attrition. On remarque que la majorité des clients existants ont une ancienneté d'environ 40 mois, tandis que les clients désinscrits sont légèrement moins nombreux dans cette même tranche.",
+            style=style_prez_graph
+        )
+
         ])
     ])
 
@@ -256,10 +275,19 @@ def init_dashboard(server):
 
         dcc.Tabs([
             # Onglet Aperçu Général
+            
             dcc.Tab(label='Aperçu Général', children=[
                 dcc.Graph(figure=fig_attrition),
-                dcc.Graph(figure=fig_attrition_gauge)
-            ]),
+                html.Div(
+                    "Graphique en barres : Il montre la répartition des clients en fonction de leur statut d'attrition. On observe que la majorité sont des clients existants (en rouge), tandis qu'une plus petite portion correspond aux clients désinscrits (en bleu).",
+                    style=style_prez_graph
+                ),
+
+                dcc.Graph(figure=fig_attrition_gauge),
+                html.Div(
+                    "Graphique en anneau : Il illustre le taux d'attrition des clients avec 83,9 % de clients existants et 16,1 % de clients désinscrits. Ce visuel permet de mieux appréhender la proportion des clients perdus.",
+                    style=style_prez_graph
+                ),                  ]),
 
             # Onglet Revenus et Ancienneté => filtres
             dcc.Tab(label='Revenus et Ancienneté', children=[
@@ -268,19 +296,38 @@ def init_dashboard(server):
                     "avec filtre sur la catégorie de revenus :",
                     style={'marginBottom': '10px', 'fontStyle': 'italic'}
                 ),
-                filters_layout
-            ]),
+                filters_layout      ]),
 
             # Onglet Transactions
             dcc.Tab(label='Transactions', children=[
             dcc.Graph(figure=fig_transactions),
+            html.Div(
+                "Graphique en ligne : Ce graphique montre l'évolution du nombre moyen de transactions en fonction de l'ancienneté des clients. On observe une tendance globalement stable avec quelques fluctuations, notamment autour des 40 mois.",
+                style=style_prez_graph
+            ),
             dcc.Graph(figure=fig_util_hist),
-            dcc.Graph(figure=fig_card_mean)            ]),
+            html.Div(
+                "Graphique en histogramme : Ce graphique représente la distribution du taux d'utilisation du crédit selon le statut d'attrition des clients. On remarque que la majorité des clients utilisent peu leur crédit, avec une concentration proche de zéro.",
+                style=style_prez_graph
+            ),
+            dcc.Graph(figure=fig_card_mean),
+            html.Div(
+                "Graphique en barres : Ce graphique illustre le montant moyen des transactions en fonction de la catégorie de carte. On constate que les cartes Gold et Platinum ont des montants moyens de transactions plus élevés que les autres catégories.",
+                style=style_prez_graph
+            )                        ]),
 
             # Onglet Analyses Multi-Dimensions
             dcc.Tab(label='Analyses Multi-Dimensions', children=[
             dcc.Graph(figure=fig_sunburst),
-            dcc.Graph(figure=fig_parallel)            ]),
+            html.Div(
+                "Graphique en diagramme circulaire : Ce graphique représente la répartition hiérarchique des revenus en fonction des catégories de cartes utilisées. On observe que la majorité des clients à faible revenu utilisent principalement la carte Blue.",
+                style=style_prez_graph
+            ),
+            dcc.Graph(figure=fig_parallel),
+            html.Div(
+                "Graphique en diagramme parallèle : Ce graphique illustre la relation entre l'attrition des clients, leur catégorie de revenus et le type de carte qu'ils possèdent. Il met en évidence que les clients existants sont majoritairement associés aux cartes Blue, quelle que soit leur tranche de revenus.",
+                style=style_prez_graph
+            )            ]),
 
             # Onglet Données Détaillées
             dcc.Tab(label='Données Détaillées', children=[
