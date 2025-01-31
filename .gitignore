@@ -20,6 +20,9 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
+#test folder
+test/
+tests/                                                                   
 
 # Environments 
 .env 

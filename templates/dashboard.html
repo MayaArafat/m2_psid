@@ -1,40 +1,192 @@
 {% extends "layout.html" %}
 
+{% block head %}<title>Dashboard</title>{% endblock head %}
+
 {% block content %}
-  <h1>Dashboard</h1>
+<div id="chart-gender" style="width:600px;height:30px;"></div>
+  <div class="pc-container">
+      <!-- [ breadcrumb ] end -->
+      <!-- [ Main Content ] start -->
+        <div class="row">
+        <!-- [ NbTotal de clients ] start -->
+        <div class="col-12 col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="mb-4">Nombre total de clients</h6>
+                    <div class="row d-flex align-items-center">
+                        <div class="col-9">
+                            <h3 class="f-w-300 d-flex align-items-center m-b-0"><i class="feather icon-arrow-up text-success f-30 m-r-10"></i>{{ kpi1 }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ Nb total de clients section ] end -->
 
-  <!-- Affichage rapide des stats (en texte) -->
-  <p><strong>Répartition par Genre :</strong></p>
-  <ul>
-    {% for lbl, val in gender_labels|zip(gender_values) %}
-      <li>{{ lbl }} : {{ val }}</li>
-    {% endfor %}
-  </ul>
+        <!-- [ Taux d'attrition  section ] start -->
+        <div class="col-12 col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="mb-4">Taux d'attrition </h6>
+                    <div class="row d-flex align-items-center">
+                        <div class="col-9">
+                            <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-down text-danger f-30 m-r-10"></i>{{ kpi2 }} %</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ Taux d'attrition section ] end -->
 
-  <!-- Conteneur pour le graphique -->
-  <div id="chart-gender" style="width:600px;height:400px;"></div>
-{% endblock %}
+        <!-- [ Ancienneté moyenne des clients section ] start -->
+        <div class="col-12 col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="mb-4">Ancienneté moyenne des clients</h6>
+                    <div class="row d-flex align-items-center">
+                        <div class="col-9">
+                            <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-up text-success f-30 m-r-10"></i>{{ kpi3 }} mois</h3>
+                        </div>
+                        <div class="col-3 text-end">
+                            <p class="m-b-0">{{ (kpi3 // 12)|int }} ans et {{ (kpi3 % 12)|int }} mois</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- [ Répartition des clients par statut d'attrition ] start -->
+        <div class="col-12 col-lg-4">
+            <div class="card w-100 h-100">
+                <div class="card-body text-center">
+                    <div id="attrition-chart" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+        <!-- [ Répartition des clients par statut d'attrition ] end -->
+
+        <div class="col-12 col-lg-4">
+            <div class="card w-100 h-100">
+                <div class="card-body text-center">
+                    <div id="graph_nbclients_par_genre"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card w-100 h-100">
+                <div class="card-body text-center">
+                    <div id="attrition-taux"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card w-100 h-100">
+                <div class="card-body text-center">
+                    <div id="transactions" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card w-100 h-100">
+                <div class="card-body text-center">
+                    <div id="hist_utilisation" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-12 col-lg-4">
+            <div class="card w-100 h-100">
+                <div class="card-body text-center">
+                    <div id="transac_moyen_by_cat" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card w-100 h-100">
+                <div class="card-body text-center">
+                    <div id="sunburst_revenu_cart" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card w-100 h-100">
+                <div class="card-body text-center">
+                    <div id="parallel_categories" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card w-100 h-100">
+                <div class="card-body text-center">
+                    <div id="income_graph" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card w-100 h-100">
+                <div class="card-body text-center">
+                    <div id="anciennete_graph" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ajout de Plotly -->
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script>
+            // Fonction pour rendre chaque graphique responsive
+            function renderResponsiveGraph(graphId, graphJSON) {
+                if (graphJSON) {
+                    var layout = graphJSON.layout || {};
+                    layout.autosize = true;  // Permet au graphique de s'adapter automatiquement
+                    layout.responsive = true; // Active le mode responsive
+        
+                    Plotly.newPlot(graphId, graphJSON.data, layout, { responsive: true });
+                }
+            }
+        
+            // Liste des graphiques avec leurs données JSON respectives
+            var graphData = {
+                "attrition-chart": {{ fig_attrition_json | safe }},
+                "attrition-taux": {{ taux_attrition_json | safe }},
+                "transactions": {{ transactions_json | safe }},
+                "hist_utilisation": {{ hist_utilisation_json | safe }},
+                "transac_moyen_by_cat": {{ transac_moyen_by_cat_json | safe }},
+                "sunburst_revenu_cart": {{ sunburst_revenu_cart_json | safe }},
+                "parallel_categories": {{ parallel_categories_json | safe }},
+                "graph_nbclients_par_genre": {{ graph_nbclients_par_genre_json | safe }},
+                "income_graph" : {{ graph_client_par_revenu_json | safe }},
+                "anciennete_graph" : {{ graph_anciennete_json | safe }},
+            };
+        
+            // Boucle sur tous les graphiques pour appliquer la responsivité
+            Object.keys(graphData).forEach(function(graphId) {
+                renderResponsiveGraph(graphId, graphData[graphId]);
+            });
+        </script>
+    </div>
+
+
+    <div class="d-grid gap-2 col-6 mx-auto mt-5">
+        <a href="{{ url_for('data_analytics') }}" class="btn btn-info fw-bold">Voir l'analyse des données</a>
+    </div>
+    
+
+
+{% endblock content %}
 
 {% block scripts %}
-  <!-- Plotly CDN -->
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  
-  <script>
-    // Conversion d'une chaîne JSON en tableau JS
-    // 'safe' empêche Jinja d'échapper les caractères JSON
-    let labels = JSON.parse('{{ gender_labels|tojson|safe }}');
-    let values = JSON.parse('{{ gender_values|tojson|safe }}');
 
-    let data = [{
-      labels: labels,
-      values: values,
-      type: 'pie'
-    }];
+<script src="{{ url_for('static', filename='assets/js/plugins/apexcharts.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/plugins/jsvectormap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/plugins/world.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/pages/dashboard-default.js') }}"></script>
 
-    let layout = {
-      title: 'Répartition par Genre'
-    };
 
-    Plotly.newPlot('chart-gender', data, layout);
-  </script>
-{% endblock %}
+{% endblock scripts %}
