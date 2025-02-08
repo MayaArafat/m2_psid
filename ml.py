@@ -10,7 +10,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 
 # Étape 1 : Importation des données
-df = pd.read_csv("BankChurners.csv")
+df = pd.read_csv("data/BankChurners.csv")
 
 # Suppression des colonnes inutiles
 drop_columns = ['CLIENTNUM', 'Naive_Bayes_Classifier_Attrition_Flag_Card_Category_Contacts_Count_12_mon_Dependent_count_Education_Level_Months_Inactive_12_mon_1', 
@@ -63,7 +63,7 @@ X = df.drop(columns=['Attrition_Flag'])
 y = df['Attrition_Flag']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-model = RandomForestClassifier(n_estimators=100, random_state=42)
+model = RandomForestClassifier(n_estimators=200, max_features= 0.8, random_state=42)
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 
