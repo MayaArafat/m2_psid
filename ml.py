@@ -63,10 +63,6 @@ sns.scatterplot(x=df['PCA1'], y=df['PCA2'], hue=df['Attrition_Flag'])
 plt.title("Projection des clients selon PCA")
 plt.show()
 
-# Étape 3 : Clustering K-Means
-kmeans = KMeans(n_clusters=3, random_state=42)
-#df['Cluster'] = kmeans.fit_predict(df[num_cols])
-
 # Étape 4 : Modélisation (Random Forest)
 model = RandomForestClassifier(n_estimators=200, max_features= 0.8, random_state=42)
 model.fit(X_train, y_train)
@@ -77,7 +73,7 @@ print("Accuracy:", accuracy_score(y_test, y_pred))
 print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
 print("Classification Report:\n", classification_report(y_test, y_pred))
 
-
+#Modèle ayant meilleur accuracy,matrice de confusion plus homogène, meilleurs résultats 
 model = GradientBoostingClassifier(n_estimators=200, max_features= 0.8, random_state=42)
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
@@ -88,7 +84,9 @@ print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
 print("Classification Report:\n", classification_report(y_test, y_pred))
 
 # =============================== SVM ===============================
+# Modèle commenté car prend trop de temps lors des tests (pas utile de retester car il n'a pas de bons résultats)
 """
+
 print("________ SVM Model (Linear)________")
 # Train a SVM model
 model_linear = SVC(kernel='linear')
@@ -201,7 +199,10 @@ def train_dense_network(model, X_train, y_train, X_test, y_test, epochs=10, batc
 history = train_dense_network(dense_network, X_train, y_train, X_test, y_test, epochs=150, batch_size=32)
 
 # Étape 5 : Evaluation du modèle
-y_pred = model.predict(X_test)
+y_pred = dense_network.predict(X_test)
+y_pred = np.round(y_pred)
+y_pred = y_pred.flatten()
+
 print("Accuracy:", accuracy_score(y_test, y_pred))
 print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
 print("Classification Report:\n", classification_report(y_test, y_pred))

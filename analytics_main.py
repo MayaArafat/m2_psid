@@ -169,7 +169,6 @@ def get_parallel_categories(df) :
     )
     return fig_parallel
 
-# Graoguqyes présent dans les détails 
 # J) Répartition des clients par catégorie de revenues
 def create_income_bar(df):
     df_income = df.groupby('Income_Category', observed=True).size().reset_index(name='Nombre de clients')
