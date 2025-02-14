@@ -137,9 +137,9 @@ def predict():
     print("Colonnes envoyées au modèle :", df_input_scaled.columns.tolist())
     print(20*"*", "Modèle :", model)
     prediction = model.predict(df_input_scaled)[0]
-
+    print(prediction)
     # Conversion du résultat
-    result = "Attrition" if prediction == 'Existing Customer' else "Non-Attrition"
+    result = "Le client est actif" if prediction == 'Existing Customer' else "Le client risque de se désinscrire"
     print("Prédiction : ", result)
     return render_template('predict.html', prediction=result)
 
