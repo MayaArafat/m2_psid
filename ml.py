@@ -4,7 +4,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neighbors import NearestCentroid
@@ -17,6 +16,8 @@ import tensorflow as tf
 from tensorflow.keras.layers import Dense, InputLayer, LeakyReLU, Dropout
 from tensorflow.keras import Model
 
+import pickle
+import os
 
 # Étape 1 : Importation des données
 df = pd.read_csv("./Data/BankChurners.csv")
@@ -34,15 +35,16 @@ df['Total_Ct_Chng_Q4_Q1'] = pd.to_numeric(df['Total_Ct_Chng_Q4_Q1'], errors='coe
 df['Avg_Utilization_Ratio'] = pd.to_numeric(df['Avg_Utilization_Ratio'], errors='coerce')
 
 # Encodage des variables catégoriques
-label_enc = LabelEncoder()
-categorical_cols = ['Gender', 'Education_Level', 'Marital_Status', 'Income_Category', 'Card_Category', 'Attrition_Flag']
+categorical_cols = ['Gender', 'Education_Level', 'Marital_Status', 'Income_Category', 'Card_Category']
+label_encoders = {col: LabelEncoder() for col in categorical_cols}
 for col in categorical_cols:
-    df[col] = label_enc.fit_transform(df[col])
+    df[col] = label_encoders[col].fit_transform(df[col])
 
 # Normalisation des variables numériques
 num_cols = ['Customer_Age', 'Dependent_count', 'Months_on_book', 'Total_Relationship_Count', 
             'Contacts_Count_12_mon', 'Credit_Limit', 'Total_Revolving_Bal', 'Total_Trans_Amt', 
-            'Total_Trans_Ct', 'Total_Amt_Chng_Q4_Q1', 'Total_Ct_Chng_Q4_Q1', 'Avg_Utilization_Ratio']
+            'Total_Trans_Ct', 'Total_Amt_Chng_Q4_Q1', 'Total_Ct_Chng_Q4_Q1', 'Avg_Utilization_Ratio'
+            ]
 
 scaler = MinMaxScaler()
 df[num_cols] = scaler.fit_transform(df[num_cols])
@@ -64,6 +66,11 @@ plt.title("Projection des clients selon PCA")
 plt.show()
 
 # Étape 4 : Modélisation (Random Forest)
+X = df.drop(columns=['Attrition_Flag'])
+y = df['Attrition_Flag']
+print(20*"*",X.columns, 20*"*")
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
 model = RandomForestClassifier(n_estimators=200, max_features= 0.8, random_state=42)
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
@@ -110,7 +117,6 @@ y_pred = model_linear.predict(X_test)
 print("Accuracy:", accuracy_score(y_test, y_pred))
 print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
 print("Classification Report:\n", classification_report(y_test, y_pred))
-
 print("________ SVM Model (Poly)________")
 # Train a SVM model
 model_linear = SVC(kernel='poly')
@@ -143,66 +149,29 @@ print("Accuracy:", accuracy_score(y_test, y_pred))
 print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
 print("Classification Report:\n", classification_report(y_test, y_pred))
 
+# Model save and deployment
 
-print("________ Deep Neural Network ________")
-class DenseNetwork (Model):
-    def __init__(self):
-        super(DenseNetwork, self).__init__()
+print("Model final : ", model)
+# Créer un dossier pour stocker les modèles si ce n'est pas déjà fait
+os.makedirs("ML/models", exist_ok=True)
 
-        # Define the dense network model that will be used for the classification
+with open("ML/models/model.pkl", "wb") as f:
+    pickle.dump(model, f)
 
-        self.__dense_network = tf.keras.Sequential([
-            InputLayer(input_shape=(19,)),
-            Dense(256),
-            Dropout(0.3),
-            LeakyReLU(),
-            Dense(128),
-            Dropout(0.3),
-            LeakyReLU(),
-            Dense(64),
-            Dropout(0.3),
-            Dense(1, activation='sigmoid')
-        ])
+with open("ML/models/scaler.pkl", "wb") as f:
+    pickle.dump(scaler, f)
 
-    def call (self, input) :
-        return self.__dense_network(input)
+with open("ML/models/encoders.pkl", "wb") as f:
+    pickle.dump(label_encoders, f)
 
-    def get_model (self) :
-        return self.__dense_network
-    
+with open("ML/models/feature_order.pkl", "wb") as f:
+    pickle.dump(X.columns.tolist(), f)
 
-# Define the loss function (2 classes possible : 0 or 1 so we use BinaryCrossentropy)
-loss_fn = tf.keras.losses.BinaryCrossentropy()
+with open("ML/models/num_cols.pkl", "wb") as f:
+    pickle.dump(num_cols, f)
 
-# Compile the model with the loss function
-dense_network = DenseNetwork()
-dense_network_optimizer = tf.keras.optimizers.Adam(learning_rate=0.002)
-dense_network.compile(optimizer=dense_network_optimizer, loss=loss_fn, metrics=['accuracy'])
+# Sauvegarde des modèles PCA
+with open("ML/models/pca.pkl", "wb") as f:
+    pickle.dump(pca, f)
 
-
-def train_dense_network(model, X_train, y_train, X_test, y_test, epochs=10, batch_size=32):
-    # Convert the data to TensorFlow datasets
-    train_dataset = tf.data.Dataset.from_tensor_slices((X_train, y_train)).batch(batch_size)
-    test_dataset = tf.data.Dataset.from_tensor_slices((X_test, y_test)).batch(batch_size)
-
-    # Train the model
-    history = model.fit(train_dataset, epochs=epochs, validation_data=test_dataset)
-
-    # Evaluate the model
-    test_loss, test_accuracy = model.evaluate(test_dataset)
-    print(f"Test Loss: {test_loss}")
-    print(f"Test Accuracy: {test_accuracy}")
-
-    return history
-
-# Example usage
-history = train_dense_network(dense_network, X_train, y_train, X_test, y_test, epochs=150, batch_size=32)
-
-# Étape 5 : Evaluation du modèle
-y_pred = dense_network.predict(X_test)
-y_pred = np.round(y_pred)
-y_pred = y_pred.flatten()
-
-print("Accuracy:", accuracy_score(y_test, y_pred))
-print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
-print("Classification Report:\n", classification_report(y_test, y_pred))
+print("Modèle, Scaler et Encodeurs sauvegardés avec succès ! ✅")
