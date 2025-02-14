@@ -8,7 +8,8 @@ from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-
+import pickle
+import os
 
 # Étape 1 : Importation des données
 df = pd.read_csv("data/BankChurners.csv")
@@ -32,15 +33,18 @@ df = df[(df['Education_Level'] != 'Unknown') & (df['Income_Category'] != 'Unknow
 df['Card_Category'] = df['Card_Category'].replace(['Gold', 'Platinum', 'Silver'], 'Silver+')
 
 # Encodage des variables catégoriques
-label_enc = LabelEncoder()
 categorical_cols = ['Gender', 'Education_Level', 'Marital_Status', 'Income_Category', 'Card_Category']
+label_encoders = {col: LabelEncoder() for col in categorical_cols}
 for col in categorical_cols:
-    df[col] = label_enc.fit_transform(df[col])
+    df[col] = label_encoders[col].fit_transform(df[col])
 
 # Normalisation des variables numériques
 num_cols = ['Customer_Age', 'Dependent_count', 'Months_on_book', 'Total_Relationship_Count', 
-            'Contacts_Count_12_mon', 'Credit_Limit', 'Total_Revolving_Bal', 'Total_Trans_Amt', 
-            'Total_Trans_Ct', 'Total_Amt_Chng_Q4_Q1', 'Total_Ct_Chng_Q4_Q1', 'Avg_Utilization_Ratio']
+            'Months_Inactive_12_mon', 'Contacts_Count_12_mon', 'Credit_Limit', 'Total_Revolving_Bal',
+            'Avg_Open_To_Buy', 'Total_Amt_Chng_Q4_Q1', 'Total_Trans_Amt', 'Total_Trans_Ct',
+            'Total_Ct_Chng_Q4_Q1', 'Avg_Utilization_Ratio']
+
+
 scaler = StandardScaler()
 df[num_cols] = scaler.fit_transform(df[num_cols])
 
@@ -62,6 +66,7 @@ df['Cluster'] = kmeans.fit_predict(df[num_cols])
 # Étape 4 : Modélisation (Random Forest)
 X = df.drop(columns=['Attrition_Flag'])
 y = df['Attrition_Flag']
+print(X.columns)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 model = RandomForestClassifier(n_estimators=200, max_features= 0.8, random_state=42)
@@ -71,3 +76,33 @@ y_pred = model.predict(X_test)
 print("Accuracy:", accuracy_score(y_test, y_pred))
 print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
 print("Classification Report:\n", classification_report(y_test, y_pred))
+
+# Model save and deployment
+
+# Créer un dossier pour stocker les modèles si ce n'est pas déjà fait
+os.makedirs("ML/models", exist_ok=True)
+
+with open("ML/models/model.pkl", "wb") as f:
+    pickle.dump(model, f)
+
+with open("ML/models/scaler.pkl", "wb") as f:
+    pickle.dump(scaler, f)
+
+with open("ML/models/encoders.pkl", "wb") as f:
+    pickle.dump(label_encoders, f)
+
+with open("ML/models/feature_order.pkl", "wb") as f:
+    pickle.dump(X.columns.tolist(), f)
+
+with open("ML/models/num_cols.pkl", "wb") as f:
+    pickle.dump(num_cols, f)
+
+# Sauvegarde des modèles PCA et KMeans
+with open("ML/models/pca.pkl", "wb") as f:
+    pickle.dump(pca, f)
+
+with open("ML/models/kmeans.pkl", "wb") as f:
+    pickle.dump(kmeans, f)
+
+
+print("Modèle, Scaler et Encodeurs sauvegardés avec succès ! ✅")
