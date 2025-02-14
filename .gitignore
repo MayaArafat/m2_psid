@@ -35,3 +35,9 @@ venv.bak/
 */Scripts/
 # mkdocs documentation 
 /site 
+
+# Ignorer tous les fichiers .pyc
+*.pyc
+
+# Ignorer tous les dossiers __pycache__
+__pycache__/
