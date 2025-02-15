@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.io as pio
 import pickle
 import os
+from analytics_main import *
 
 # Fonction pour charger un fichier pickle en toute sécurité
 def load_pickle(file_path):
